@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For My Queen 👑</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@1,900&family=Poppins:wght@300;600;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #ff4d6d; --gold: #ffd700; --royal-red: #4b0000; --soft-gold: #d4af37; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: white; font-family: 'Poppins', sans-serif; overflow: hidden; touch-action: manipulation; }
+
+        .sparkle { position: fixed; width: 6px; height: 6px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 999; box-shadow: 0 0 10px var(--gold); }
+
+        /* --- STAGE 1: INTRO --- */
+        #welcome {
+            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('galaxy-bg.jpg');
+            background-size: cover; background-position: center;
+        }
+        .envelope-glow { font-size: 100px; cursor: pointer; filter: drop-shadow(0 0 20px var(--primary)); animation: float 3s infinite ease-in-out; }
+        .intro-title { font-family: 'Dancing Script', cursive; font-size: 3.5rem; color: var(--gold); text-shadow: 0 0 30px var(--primary); margin-top: 30px; text-align: center; }
+
+        /* --- STAGE 2: THE HUNT --- */
+        #hunt-screen { 
+            display: none; height: 100vh; position: relative;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('silk-bg.jpg');
+            background-size: cover; background-position: center;
+        }
+        .hunt-instr { position: absolute; top: 10%; width: 100%; text-align: center; font-family: 'Dancing Script'; font-size: 1.8rem; color: var(--gold); text-shadow: 0 0 10px #000; animation: pulse 2s infinite; z-index: 5; }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+        .photo-target {
+            position: absolute; width: 110px; height: 110px; border-radius: 50%;
+            border: 3px solid var(--gold); overflow: hidden; box-shadow: 0 0 20px var(--gold);
+            animation: floatPhoto 6s infinite ease-in-out; z-index: 20;
+        }
+        .photo-target img { width: 100%; height: 100%; object-fit: cover; }
+
+        #note-display {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            background: #fffcf2; color: #333; padding: 40px 20px; border-radius: 10px;
+            box-shadow: 0 0 100px rgba(0,0,0,0.9), inset 0 0 40px var(--soft-gold);
+            z-index: 200; width: 85%; max-width: 350px; border: 2px solid var(--soft-gold);
+            transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-align: center;
+        }
+        #note-display.open { transform: translate(-50%, -50%) scale(1); }
+        #note-text { 
+            font-family: 'Playfair Display', serif; 
+            font-style: italic; 
+            font-size: 1.2rem; 
+            color: var(--royal-red); 
+            white-space: pre-line; /* Essential for your poem's spacing */
+        }
+
+        /* --- STAGE 3: THE FINALE --- */
+        #main-content { 
+            display: none; padding: 20px; height: 100vh; overflow-y: auto; text-align: center;
+            background: radial-gradient(circle at top, #660000 0%, #1a0005 50%, #000 100%); 
+        }
+        
+        .ornate-frame {
+            position: relative; width: 290px; height: 390px; margin: 30px auto;
+            padding: 12px; background: linear-gradient(45deg, #d4af37, #fff9e6, #d4af37);
+            border-radius: 8px; box-shadow: 0 0 40px rgba(255, 77, 109, 0.6);
+            animation: tiltFrame 4s infinite alternate;
+        }
+        @keyframes tiltFrame { from { transform: rotate(-1.5deg); } to { transform: rotate(1.5deg); } }
+        
+        .slider { width: 100%; height: 100%; overflow: hidden; position: relative; border-radius: 4px; background: #000; }
+        .slider img { 
+            width: 100%; height: 100%; 
+            object-fit: cover; 
+            position: absolute; opacity: 0; transition: 1.5s ease-in-out; left: 0; top: 0;
+        }
+        .slider img.active { opacity: 1; }
+
+        .ticker-container {
+            margin: 40px -20px 20px -20px; background: rgba(0, 0, 0, 0.7); 
+            border-top: 3px solid var(--gold); border-bottom: 3px solid var(--gold);
+            padding: 20px 0; overflow: hidden; backdrop-filter: blur(10px);
+        }
+        .ticker-move { display: inline-block; white-space: nowrap; animation: marquee 18s linear infinite; }
+        .ticker-item { font-family: 'Dancing Script', cursive; font-size: 2.3rem; color: #fff; text-shadow: 0 0 15px var(--gold); padding-right: 150px; }
+
+        .btn-luxury {
+            background: linear-gradient(45deg, var(--royal-red), var(--primary));
+            border: 1px solid var(--gold); color: white; padding: 15px 40px;
+            border-radius: 50px; cursor: pointer; font-weight: bold; margin-top: 20px;
+            text-transform: uppercase; letter-spacing: 2px;
+        }
+
+        @keyframes fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        @keyframes floatPhoto { 0%, 100% { transform: translate(0,0); } 50% { transform: translate(10px, -25px); } }
+        @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    </style>
+</head>
+<body onmousemove="createSparkle(event)" ontouchmove="createSparkle(event.touches[0])">
+
+    <div id="welcome">
+        <div class="envelope-glow" onclick="startHunt()">💌</div>
+        <h1 class="intro-title">To My Future Wife</h1>
+    </div>
+
+    <div id="hunt-screen">
+        <div class="hunt-instr">✨ Tap on the floating memories... ✨</div>
+        <div id="game-canvas"></div>
+        <div id="note-display">
+            <div id="note-icon" style="font-size: 35px; margin-bottom: 10px;">⚜</div>
+            <p id="note-text"></p>
+            <button class="btn-luxury" id="note-btn" onclick="closeNote()">Find More</button>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <h1 style="font-family: 'Dancing Script'; font-size: 3.8rem; color: var(--gold); margin: 20px 0 0 0;">Happy Birthday</h1>
+        <p style="letter-spacing: 8px; font-size: 0.7rem; color: #fff; opacity: 0.7;">MY ETERNAL QUEEN</p>
+        
+        <div class="ornate-frame">
+            <div class="slider" id="slider">
+                <img src="slideshow-1.jpg" class="active">
+                <img src="slideshow-2.jpg">
+                <img src="slideshow-3.jpg">
+            </div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.07); padding: 25px; border-radius: 20px; width: 85%; margin: 30px auto; border: 1px solid rgba(212,175,55,0.3); backdrop-filter: blur(10px);">
+            <p style="margin: 0; color: var(--gold); font-size: 0.7rem; letter-spacing: 3px;">TIME SPENT LOVING YOU</p>
+            <div id="timer" style="font-size: 1.8rem; font-weight: 900; margin-top: 10px; font-family: 'Playfair Display', serif; color: #fff; text-shadow: 0 0 10px var(--primary);"></div>
+        </div>
+
+        <div class="ticker-container">
+            <div class="ticker-move">
+                <span class="ticker-item">YOU ARE MY WORLD 🌍•</span>
+                <span class="ticker-item">FOREVER YOURS 🌹•</span>
+                <span class="ticker-item">HAPPY BIRTHDAY QUEEN 👑•</span>
+                <span class="ticker-item">MY WIFE💖 •</span>
+                <span class="ticker-item">YOU ARE MY WORLD 🌍•</span>
+                <span class="ticker-item">FOREVER YOURS 🌹•</span>
+                <span class="ticker-item">HAPPY BIRTHDAY QUEEN 👑•</span>
+                <span class="ticker-item">MY WIFE💖•</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let found = 0;
+        const notes = [
+            "I love youu soo muchh. 😘",
+            "Be happy everydayy. 😊",
+            "You are the most beautiful girl. ❤️",
+            "Always take care of yourself. ⚡",
+            "Happy Birthday, my forever. 🌹"
+        ];
+
+        // YOUR CUSTOM POEM LETTER
+        const finalLetter = `Happy birthday cutiepie 🎂💖
+Wishh you a very happy and lovely day😊
+I lovee youu soo muchhh 😘💗💖
+
+                ⚡
+                
+Arey tum khoobsurat 
+Jaise chand lagtii ho 🌕
+
+Tum nadan prr
+Pyari behisaab lgtii ho 😍😘
+
+Ye kaanch ka tukda 
+Kya btayega tumhe tumhari khoobsuratii 💖💗
+
+Zara meri aakhon se poochho 👀
+Tum kitnii lajawaab lgtii hoo 😍🥰`;
+
+        const huntPhotos = ['her-photo-1.jpg', 'her-photo-2.jpg', 'her-photo-3.jpg', 'her-photo-4.jpg', 'her-photo-5.jpg'];
+
+        function createSparkle(e) {
+            const s = document.createElement('div');
+            s.className = 'sparkle';
+            s.style.left = e.clientX + 'px'; s.style.top = e.clientY + 'px';
+            document.body.appendChild(s);
+            s.animate([{ opacity: 1 }, { transform: 'translateY(20px) scale(0)', opacity: 0 }], 800).onfinish = () => s.remove();
+        }
+
+        function startHunt() {
+            document.getElementById('welcome').style.display = 'none';
+            document.getElementById('hunt-screen').style.display = 'block';
+            spawnPhotos();
+        }
+
+        function spawnPhotos() {
+            const canvas = document.getElementById('game-canvas');
+            huntPhotos.forEach((src, i) => {
+                const p = document.createElement('div');
+                p.className = 'photo-target';
+                p.style.left = (15 + Math.random() * 60) + '%';
+                p.style.top = (20 + Math.random() * 60) + '%';
+                p.innerHTML = `<img src="${src}" onerror="this.src='https://via.placeholder.com/110?text=❤️'">`;
+                p.onclick = (e) => {
+                    popHeart(e.clientX, e.clientY);
+                    setTimeout(() => {
+                        document.getElementById('note-text').innerText = notes[i];
+                        document.getElementById('note-display').classList.add('open');
+                        p.style.display = 'none';
+                        found++;
+                        if(found === 5) { document.getElementById('note-btn').innerText = "Open Final Letter"; }
+                    }, 300);
+                };
+                canvas.appendChild(p);
+            });
+        }
+
+        function popHeart(x, y) {
+            const h = document.createElement('div');
+            h.style.cssText = `position:fixed; left:${x}px; top:${y}px; font-size:100px; z-index:999; transform:translate(-50%,-50%);`;
+            h.innerHTML = '😘';
+            document.body.appendChild(h);
+            h.animate([{ transform: 'translate(-50%,-50%) scale(0)', opacity: 1 }, { transform: 'translate(-50%,-50%) scale(5)', opacity: 0 }], 1000).onfinish = () => h.remove();
+        }
+
+        function closeNote() {
+            const display = document.getElementById('note-display');
+            display.classList.remove('open');
+            if(found === 5) {
+                setTimeout(() => {
+                    document.getElementById('note-text').innerText = finalLetter;
+                    document.getElementById('note-icon').innerHTML = "💌";
+                    document.getElementById('note-btn').innerText = "See My Gift";
+                    document.getElementById('note-btn').onclick = openFinale;
+                    display.classList.add('open');
+                    found = 6;
+                }, 500);
+            }
+        }
+
+        function openFinale() {
+            document.getElementById('hunt-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            startFinal();
+        }
+
+        function startFinal() {
+            let imgs = document.querySelectorAll('.slider img');
+            let idx = 0;
+            setInterval(() => {
+                imgs[idx].classList.remove('active');
+                idx = (idx + 1) % imgs.length;
+                imgs[idx].classList.add('active');
+            }, 4000);
+
+            const start = new Date("2025-09-14"); 
+            setInterval(() => {
+                const diff = new Date() - start;
+                const d = Math.floor(diff / 86400000);
+                const h = Math.floor((diff / 3600000) % 24);
+                const m = Math.floor((diff / 60000) % 60);
+                const s = Math.floor((diff / 1000) % 60);
+                document.getElementById('timer').innerText = `${d}d ${h}h ${m}m ${s}s`;
+            }, 1000);
+
+            setInterval(() => {
+                const h = document.createElement('div');
+                h.style.cssText = `position:fixed; top:-50px; left:${Math.random()*100}vw; font-size:${Math.random()*20+20}px; z-index:98; animation: fall ${Math.random()*3+3}s linear forwards;`;
+                h.innerHTML = ['😘','💖','⚡','💍','🌸','🥳','👑','💕'][Math.floor(Math.random()*5)];
+                document.body.appendChild(h);
+                setTimeout(() => h.remove(), 6000);
+            }, 250);
+        }
+    </script>
+</body>
+</html>
